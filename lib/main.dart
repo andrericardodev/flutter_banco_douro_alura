@@ -13,8 +13,8 @@ class BancoDouroApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        'login': (context) => LoginScreen(),
-        'home': (context) => HomeScreen(),
+        'login': (context) => const LoginScreen(),
+        'home': (context) => const HomeScreen(),
       },
       initialRoute: 'login',
     );
