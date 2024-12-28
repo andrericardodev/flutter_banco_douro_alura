@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_banco_douro/models/account.dart';
+import 'package:flutter_banco_douro/services/account_service.dart';
 import 'package:flutter_banco_douro/ui/styles/colors.dart';
+import 'package:uuid/uuid.dart';
 
 class AddAccountModal extends StatefulWidget {
   const AddAccountModal({super.key});
@@ -11,11 +14,15 @@ class AddAccountModal extends StatefulWidget {
 class _AddAccountModalState extends State<AddAccountModal> {
   String _accountType = "AMBROSIA";
 
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+
+  bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.75,
-      width: MediaQuery.of(context).size.width - 16,
       padding: EdgeInsets.only(
         top: 0,
         left: 32,
@@ -46,11 +53,13 @@ class _AddAccountModalState extends State<AddAccountModal> {
               ),
             ),
             TextFormField(
+              controller: _nameController,
               decoration: InputDecoration(
                 labelText: "Nome",
               ),
             ),
             TextFormField(
+              controller: _lastNameController,
               decoration: InputDecoration(
                 labelText: "Último nome",
               ),
@@ -95,10 +104,7 @@ class _AddAccountModalState extends State<AddAccountModal> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(Colors.white),
-                    ),
-                    onPressed: () {},
+                    onPressed: _isLoading ? null : _onButtonCancelClick,
                     child: Text(
                       "Cancelar",
                       style: TextStyle(color: Colors.black),
@@ -107,15 +113,19 @@ class _AddAccountModalState extends State<AddAccountModal> {
                 ),
                 Expanded(
                   child: ElevatedButton(
-                    style: ButtonStyle(
+                    style: ButtonStyle( 
                       backgroundColor:
                           WidgetStatePropertyAll(AppColors.primary),
                     ),
-                    onPressed: () {},
-                    child: Text(
-                      "Adicionar",
-                      style: TextStyle(color: Colors.black),
-                    ),
+                    onPressed: _onButtonSendClick,
+                    child: _isLoading
+                        ? const CircularProgressIndicator(
+                            color: Colors.black,
+                          )
+                        : const Text(
+                            "Adicionar",
+                            style: TextStyle(color: Colors.black),
+                          ),
                   ),
                 ),
               ],
@@ -124,5 +134,38 @@ class _AddAccountModalState extends State<AddAccountModal> {
         ),
       ),
     );
+  }
+
+  _onButtonCancelClick() {
+    if (!_isLoading) {
+      Navigator.of(context).pop();
+    }
+  }
+
+  _onButtonSendClick() async {
+    if (!_isLoading) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      String name = _nameController.text;
+      String lastName = _lastNameController.text;
+
+      Account account = Account(
+        id: Uuid().v1(),
+        name: name,
+        lastName: lastName,
+        balance: 0,
+        accountType: _accountType,
+      );
+
+      await AccountService().addAccount(account);
+
+      closeModal();
+    }
+  }
+
+  closeModal() {
+    Navigator.of(context).pop();
   }
 }
