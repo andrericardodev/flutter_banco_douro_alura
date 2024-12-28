@@ -119,9 +119,12 @@ class _AddAccountModalState extends State<AddAccountModal> {
                     ),
                     onPressed: _onButtonSendClick,
                     child: _isLoading
-                        ? const CircularProgressIndicator(
-                            color: Colors.black,
-                          )
+                        ? SizedBox(height: 16, width: 16,
+                          child: const CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 3,
+                            ),
+                        )
                         : const Text(
                             "Adicionar",
                             style: TextStyle(color: Colors.black),
