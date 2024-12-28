@@ -36,6 +36,14 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.primary,
+        onPressed: () {},
+        child: Icon(
+          Icons.add,
+          color: Colors.black,
+        ),
+      ),
       body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: RefreshIndicator(
