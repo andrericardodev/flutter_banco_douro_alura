@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_banco_douro/models/account.dart';
 import 'package:flutter_banco_douro/ui/styles/colors.dart';
@@ -6,7 +8,7 @@ class AccountWidget extends StatelessWidget {
   final Account account;
   const AccountWidget({super.key, required this.account});
 
-  @override 
+  @override
   Widget build(BuildContext context) {
     return Container(
       height: 128,
@@ -31,9 +33,12 @@ class AccountWidget extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Text("ID: ${account.id}"),
+              Text(
+                "ID: ${account.id.substring(0, min(account.id.length, 5))}",
+              ),
               Text("Saldo: R\$ ${account.balance.toStringAsFixed(2)}"),
-              Text("Tipo de Conta: ${account.accountType ?? "Sem tipo definido"}"),
+              Text(
+                  "Tipo de Conta: ${account.accountType ?? "Sem tipo definido"}"),
             ],
           ),
           IconButton(
